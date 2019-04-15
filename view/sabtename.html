@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- <link rel="stylesheet" href="style/css-for-hw8.css"> -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body>
+    <div class="divtotal">
+        <div>
+                <h2>SignUp Form</h2>
+                <h2>ثبت نام</h2>
+
+                <form action="/create-user" method="POST">
+                    <div class="imgcontainer">
+                        <img src="image/img_avatar2.png" alt="Avatar" class="avatar">
+                    </div>
+            
+                    <div class="container">
+                        <label for="fname"><b>Firstname</b></label>
+                        <input type="text" placeholder="Enter Firstname" name="fname" required>
+            
+                        <label for="lname"><b>Lastname</b></label>
+                        <input type="text" placeholder="Enter Lastname" name="lname" required>
+            
+                        <label for="uname"><b>Username</b></label>
+                        <input type="text" placeholder="Enter Username" name="uname" required>
+            
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw">
+            
+                        <button type="submit">Login</button>
+                        <label>
+                            <input type="checkbox" checked="checked" name="remember"> Remember me
+                        </label>
+                    </div>
+            
+                    <div class="container" style="background-color:#f1f1f1">
+                        <button type="button" class="cancelbtn">Cancel</button>
+                       
+                    </div>
+                </form>
+
+         
+        </div>
+        <div>
+                <h2>SignIn Form</h2>
+                <h2>ورود </h2>
+
+                <form action="/authentication" method="POST">
+                    <div class="imgcontainer">
+                        <img src="image/img_avatar2.png" alt="Avatar" class="avatar">
+                    </div>
+            
+                    <div class="container">
+                      
+            
+                        <label for="uname"><b>Username</b></label>
+                        <input type="text" placeholder="Enter Username" name="username" required>
+            
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="password" required>
+            
+                        <button type="submit">Login</button>
+                        <label>
+                            <input type="checkbox" checked="checked" name="remember2"> Remember me
+                        </label>
+                    </div>
+            
+                    <div class="container" style="background-color:#f1f1f1">
+                        <button type="button" class="cancelbtn">Cancel</button>
+                        <span class="psw">Forgot <a href="#">password?</a></span>
+                    </div>
+                </form>
+        </div>
+    </div>
+
+   
+
+</body>
+
+</html>
