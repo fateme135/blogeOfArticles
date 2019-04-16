@@ -36,33 +36,46 @@ app.use(bodyParser.json()) // parse application/json
 app.use(bodyParser.urlencoded({ // parse application/x-www-form-urlencoded
     extended: false
 }))
-//////////////////////////////////////////////////////////////////////////////////
-
-
+////////////////////////////create-User//////////////////////////////////////////////////////
 app.post('/create-user', function (req, res) {
     const REQ_BODY1 = req.body;
     if (!req.body) return res.sendStatus(400)
-    console.log(REQ_BODY1)
-
-
     let user = new User({
         firstname: REQ_BODY1.fname,
         lastname: REQ_BODY1.lname,
-        username:REQ_BODY1.uname,
+        username: REQ_BODY1.uname,
         password: REQ_BODY1.psw,
     })
-
     user.save(function (err, user) {
         if (err)
             return console.log(err)
 
         //     res.json(user) //ye safheye json miare.....
         // });
-
-
         res.render("sabtename.ejs", { //bagasht b safheye sabtename....
             msg: "Seccess"
         });
+    })
+})
+///////////////////////////////create-Article////////////////////////////////////////////////
+app.post("/save-article", isLogedIn, function (req, res) {
+    const REQ_BODY = req.body;
+    if (!req.body) return res.sendStatus(400)
+    let article = new Article({
+        name: REQ_BODY.name,
+        author: req.user._id,
+        //author: author._id,
+        //  author: req.body.author,
+        shortTxt: REQ_BODY.abstract,
+        longTxt: REQ_BODY.article,
+        date: REQ_BODY.date,
+        link: REQ_BODY.name,
+    });
+    article.save(function (err, article) {
+        if (err)
+            return console.log(err)
+        //    res.json(article)
+        res.redirect('/dashboard');//bagasht b safheye sabtename....  
     })
 })
 /////////////////////////////////////////////////////////////////////////////////
@@ -70,8 +83,6 @@ app.post('/create-user', function (req, res) {
 app.get('/', function (req, res) {
     res.render('sabtename.ejs')
 })
-
-
 passport.use('local-login', new LocalStrategy(function (username, password, done) { //for log in
 
     User.findOne({
@@ -131,94 +142,94 @@ app.post('/authentication', passport.authenticate('local-login', {
 app.get('/worth', function (req, res) {
     res.render("sabtename.ejs")
 })
+////////////////////////////////without populate/////////////////////////////////
+// app.get('/dashboard', isLogedIn, function (req, res) {
+//     Article.find({}, function (err, articles) {
+//         if (err)
+
+//             res.send(err);
+
+//         articles.forEach(function (article, index) {
+//             User.findById(article.author, function (err, user) {
+//                 if (err)
+//                     res.send(err);
+
+//                 article.author = user.firstname;
+//                 if (index == articles.length - 1) {
+//                     res.render("article.ejs", {
+//                         articles
+//                     })
+//                 }
+//             })
+//         })
+
+//     })
+// })
+//////////////////////////////////learn more// without populate////////////////////////////////////
+// app.get("/article/:cont", isLogedIn, function (req, res) {
+//     Article.findOne({
+//         name: req.params.cont
+//     }, function (err, article) {
+//         if (err)
+//             res.send(err);
+//         User.findById(article.author, function (err, user) {
+//             if (err)
+//                 res.send(err);
+//             res.render("read-article.ejs", {
+//                 name: article.name,
+//                 author: user.firstname,
+//                 shortTxt: article.shortTxt,
+//                 longTxt: article.longTxt,
+//                 date: article.date,
+//             })
+//         })
+//     })
+// })
+/////////////////with populate/////solution1/////////////////
 app.get('/dashboard', isLogedIn, function (req, res) {
-    Article.find({}, function (err, articles) {
-        if (err)
-        
-            res.send(err);
+    Article.
+        find({}).
+        populate('author')
+        .exec(function (err, articles) {
+            if (err) res.send(err);
+            articles.forEach(function (article, index) {
+                User.find({ author: req.user._id }, function (err, user) {
+                    if (err)
+                        res.send(err);
+                    if (index == articles.length - 1) {
+                        res.render("article.ejs", {
 
-        articles.forEach(function (article, index) {
-            User.findById(article.author, function (err, user) {
-                if (err)
-                    res.send(err);
-
-                article.author = user.firstname;
-                if (index == articles.length - 1) {
-                    res.render("article.ejs", {
-                        articles
-                    })
-                }
+                            articles,//این شامل همه ی اطلاعات مقاله ی مورد نظر و نویسنده ی آن است
+                            // author: article.author.firstname + " " + article.author.lastname,//این به نمی دونم چرا نام نویسنده رو نمیده
+                        })
+                        console.log('The author is ....%s', article.author.firstname + " " + article.author.lastname);
+                    }
+                })
             })
         })
-
-    })
 })
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-app.post("/save-article", isLogedIn, function (req, res) {
-    
-    const REQ_BODY = req.body;
-
-    if (!req.body) return res.sendStatus(400)
-    let article = new Article({
-        name: REQ_BODY.name,
-        author: req.user._id,
-        //  author: req.body.author,
-        shortTxt:REQ_BODY.abstract,
-        longTxt: REQ_BODY.article,
-        date: REQ_BODY.date,
-        link:REQ_BODY.name,
-    });
-
-    article.save(function (err, article) {
+/////////////////////////learn more// //////with populate////solution2///////////////////////
+app.get("/article/:cont", function (req, res) {
+    Article.findOne({ name: req.params.cont }, function (err, article) {
         if (err)
-            return console.log(err)
-
-
-        //    res.json(article)
-        
-        res.redirect('/dashboard') ;//bagasht b safheye sabtename....
-
-       
-    })
-
-
+            return res.send(err);
+        User.find({ author: req.user._id }, (err, user) => {
+            if (err) {
+                console.log(err);
+                return res.send(err);
+            }
+            else {
+                res.render("read-article.ejs", {
+                    name: article.name,
+                    author: article.author.firstname,
+                    shortTxt: article.shortTxt,
+                    longTxt: article.longTxt,
+                    date: article.date,
+                    user
+                })
+            }
+        }).populate('author');
+    }).populate('author');
 })
-//////////////////////////////////////////////////////////////////////
-app.get("/article/:cont", isLogedIn, function (req, res) {
-
-    let news;
-    Article.findOne({
-        name: req.params.cont
-    }, function (err, article) {
-        if (err)
-            res.send(err);
-
-
-        User.findById(article.author, function (err, user) {
-            if (err)
-                res.send(err);
-            res.render("read-article.ejs", {
-                name: article.name,
-                author: user.firstname,
-                shortTxt: article.shortTxt,
-                longTxt: article.longTxt,
-                date: article.date,
-               
-
-            })
-
-        })
-
-    })
-
-})
-
-
-app.listen(3030)
+///////////////////////////////////////////////////////////////
+app.listen(3000)
