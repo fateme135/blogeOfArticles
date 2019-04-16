@@ -1,95 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/css-for-hw8.css">
-	<title>ARTICLE</title>
+    <title>ARTICLE</title>
 </head>
+
 <body>
 
-		
-   <div class="div1">
-       <p class="p1">
-       ......سلام <br>
-        ..... برای اضافه کردن مقاله ی جدید به زیر مراجعه کنید
-       </p>
-       
-		
-       
 
-		<section >
-				<div class="create">
-					
-							
-						<form action="save-article" method="post" >
-						
-                            <h1>ایجاد مقاله</h1>
-                            <div class="container">
-                        
-                                <label for="name1" >: نام مقاله</label>
-                                <input id="name1" name="name" type="textarea" class="container"> <br>
-                           
-                                <!-- <label for="name1" >: نام  نویسنده</label>
+    <div class="div1">
+        <p class="p1">
+            ......سلام <br>
+            ..... برای اضافه کردن مقاله ی جدید به زیر مراجعه کنید
+            همچنین امکان دیدن کل مقاله ی مورد نظر و
+            ..........مقالات خودت نیز وجود دارد
+        </p>
+
+
+
+
+        <section>
+            <div class="create">
+
+
+                <form action="save-article" method="post">
+
+                    <h1>ایجاد مقاله</h1>
+                    <div class="container">
+
+                        <label for="name1">: نام مقاله</label>
+                        <input id="name1" name="name" type="textarea" class="container"> <br>
+
+                        <!-- <label for="name1" >: نام  نویسنده</label>
                                 <input id="name1" name="author" type="textarea" class="container"> <br> -->
-                           
-                                <label for="shtext" >متن کوتاه درباره ی مقاله :</label>
-                                <input id="shtext"  name="abstract" type="textarea"class="container"></input><br>
-                          
-                                <label for="text"> متن اصلی :</label>
-                                <input id=" text" name="article" type="textarea" class="container"></input><br>
-						
-                                <label for="date" >تاریخ :</label>
-                                <input  name="date" type="date" class="container"><br>
-							
-                                <label for="picture" >عکس درباره ی مقاله :</label>
-                                <input  name="picture" type="file" class="container"></input><br>
-                          
-                                <input type="submit" value="Create Article"  class="cancelbtn" ></input>
-                            </div>
-                        </form>
-						<br>
-						
-				
-				</div>
-             </section>
-             <section>
-                 <button>
-                     <a href="article.ejs#rdartcl">
-                        مشاهده مقالات خود
-                     </a>
-                 </button>
-             </section>
-             <section  class="div1">
-                    <div >
-                        <div >
-                            <%articles.forEach(function(article){%>
-                                <div>
-                                    <div >
-                                        <div >
-                                            
-                                            <img src="<%=article.pic%>" alt="" />
-                                        </div>
-                                        <div class="">
-                                            <header class="align-center">
-                                                <p><%=article.author%></p>
-                                                <h2><%=article.name%></h2>
-                                            </header>
-                                            <p> <%=article.shortTxt%>></p>
-                                            <p>Date: <%=article.date%></p>
-                                            <footer class="">
-                                                <a href="article/<%=article.link%>" class="cancelbtn" >Learn More</a> 
-                                               
-                                            </footer>
-                                        </div>
-                                    </div>
-                                </div>
-                            <%})%>
-       </div>
-    </section>
 
-	
-		
-	
+                        <label for="shtext">متن کوتاه درباره ی مقاله :</label>
+                        <input id="shtext" name="abstract" type="textarea" class="container"></input><br>
+
+                        <label for="text"> متن اصلی :</label>
+                        <input id=" text" name="article" type="textarea" class="container"></input><br>
+
+                        <label for="date">تاریخ :</label>
+                        <input name="date" type="date" class="container"><br>
+
+                        <label for="picture">عکس درباره ی مقاله :</label>
+                        <input name="picture" type="file" class="container"></input><br>
+
+                        <input type="submit" value="Create Article" class="cancelbtn"></input>
+                    </div>
+                </form>
+                <br>
+
+
+            </div>
+        </section>
+        <section>
+            <button>
+                <a href="/myArticle">
+                    مشاهده مقالات خود
+                </a>
+            </button>
+        </section>
+        <section class="div1" >
+            <div>
+                <div>
+                    <%articles.forEach(function(article){%>
+                    <div style="border:3px solid blue">
+                        <div>
+                            <div>
+
+                                <img src="<%=article.pic%>" alt="" />
+                            </div>
+                            <div class="">
+                                <header class="align-center">
+                                    <p>نام نویسنده :<%=article.author.firstname%> <%=article.author.lastname%></p>
+                                    <h2>نام مقاله :<%=article.name%></h2>
+                                </header>
+                                <p> متن کوتاه : <%=article.shortTxt%></p>
+                                <p> تاریخ : <%=article.date%></p>
+                                <footer class="">
+                                    <a href="article/<%=article.link%>" class="cancelbtn"> ادامه ی مطلب</a>
+
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                    <%})%>
+                </div>
+        </section>
+
+
+
+
 </body>
+
 </html>
