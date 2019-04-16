@@ -86,7 +86,7 @@ app.get('/', function (req, res) {
 passport.use('local-login', new LocalStrategy(function (username, password, done) { //for log in
 
     User.findOne({
-        username: username
+        username: username,
     }, function (err, user) {
 
         if (err) {
@@ -231,5 +231,19 @@ app.get("/article/:cont", function (req, res) {
         }).populate('author');
     }).populate('author');
 })
+//////////////////////////////show-myarticle/////////////////////////////
+app.get("/:cont", isLogedIn, function (req, res) {
+    Article.find({ author: req.user._id }, (err, articles) => {
+        console.log(req.user._id);
+        console.log(articles);
+        if (err) res.send(err);
+        articles.forEach(function (article, index) {
+            if (index == articles.length - 1) { res.render("view-myArticles.ejs", { articles })
+            }
+        })
+    })
+        .populate('author');
+})
+
 ///////////////////////////////////////////////////////////////
 app.listen(3000)
